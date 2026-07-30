@@ -34,3 +34,9 @@ config.php
 database.php
 install.php
 .workbuddy/
+*.bak*
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
