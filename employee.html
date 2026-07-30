@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华运物流集团 - 员工端</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f0f2f5;font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',Helvetica,Arial,sans-serif}
+    .app-wrap{display:flex;min-height:100vh}
+    
+    /* 左侧导航 - 员工端绿色主题 */
+    .sidebar{width:220px;background:linear-gradient(180deg,#065f46 0%,#047857 100%);flex-shrink:0;display:flex;flex-direction:column;position:fixed;left:0;top:0;height:100vh;z-index:100;box-shadow:2px 0 20px rgba(0,0,0,.3)}
+    .sidebar-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px}
+    .sidebar-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+    .sidebar-logo .logo-text{font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+    .sidebar-logo .logo-text small{display:block;font-size:10px;font-weight:400;color:rgba(255,255,255,.6);letter-spacing:1px}
+    .sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+    .nav-item{display:flex;align-items:center;padding:10px 16px;margin:1px 8px;border-radius:8px;color:rgba(255,255,255,.75);cursor:pointer;text-decoration:none;font-size:14px;transition:all .2s;gap:10px;position:relative}
+    .nav-item:hover{background:rgba(255,255,255,.12);color:#fff}
+    .nav-item.active{background:rgba(16,185,129,.35);color:#fff}
+    .nav-item.active::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:3px;height:20px;background:#10b981;border-radius:0 2px 2px 0}
+    .nav-item i{width:18px;text-align:center;font-size:14px}
+    .nav-item .nav-badge{background:#f59e0b;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:auto;font-weight:600}
+
+    /* 主内容区 */
+    .main-content{flex:1;margin-left:220px;display:flex;flex-direction:column;min-height:100vh}
+    .topbar{background:linear-gradient(90deg,#047857,#10b981);padding:0 24px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+    .topbar-left{display:flex;align-items:center;gap:16px;flex:1}
+    .topbar-breadcrumb{color:rgba(255,255,255,.75);font-size:13px;display:flex;align-items:center;gap:6px}
+    .topbar-breadcrumb span{color:#fff}
+    .topbar-right{display:flex;align-items:center;gap:12px}
+    .topbar-time{color:#fff;font-size:14px;font-weight:600}
+    .topbar-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;transition:all .2s}
+    .topbar-btn:hover{background:rgba(255,255,255,.3)}
+    .topbar-btn-back{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.5);font-weight:600}
+    .topbar-btn-back:hover{background:rgba(255,255,255,.4);transform:translateX(-2px)}
+    .topbar-btn-home{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.5);font-weight:600}
+    .topbar-btn-home:hover{background:rgba(255,255,255,.4)}
+
+    .page-body{padding:16px 24px 24px;background:#f0f2f5;flex:1}
+    .page-container{display:none}
+    .page-container.active{display:block;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    /* 个人信息卡片 */
+    .profile-card{background:linear-gradient(135deg,#065f46,#047857);border-radius:12px;padding:20px;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:20px}
+    .profile-avatar{width:64px;height:64px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700}
+    .profile-info{flex:1}
+    .profile-name{font-size:20px;font-weight:700;margin-bottom:4px}
+    .profile-role{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:8px}
+    .profile-stats{display:flex;gap:24px}
+    .profile-stat{text-align:center}
+    .profile-stat-val{font-size:18px;font-weight:700}
+    .profile-stat-label{font-size:11px;color:rgba(255,255,255,.6)}
+
+    /* 快捷操作卡片 */
+    .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .quick-action{background:#fff;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;border:1px solid rgba(0,0,0,.04)}
+    .quick-action:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+    .quick-action i{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:20px}
+    .quick-action.blue i{background:#eff6ff;color:#3b82f6}
+    .quick-action.green i{background:#f0fdf4;color:#10b981}
+    .quick-action.orange i{background:#fff7ed;color:#f59e0b}
+    .quick-action.purple i{background:#faf5ff;color:#9333ea}
+    .quick-action-text{font-size:13px;font-weight:600;color:#334155}
+
+    /* KPI 卡片 */
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .kpi-card{background:#fff;border-radius:8px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:all .25s;border:1px solid rgba(0,0,0,.04)}
+    .kpi-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1)}
+    .kpi-icon-wrap{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .kpi-icon-blue{background:#eff6ff;color:#2563eb}
+    .kpi-icon-green{background:#f0fdf4;color:#16a34a}
+    .kpi-icon-purple{background:#faf5ff;color:#9333ea}
+    .kpi-icon-orange{background:#fff7ed;color:#ea580c}
+    .kpi-info{flex:1}
+    .kpi-label{font-size:12px;color:#94a3b8;font-weight:500;margin-bottom:4px}
+    .kpi-value{font-size:22px;font-weight:800;color:#1e293b;line-height:1.2}
+    .kpi-trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;margin-top:4px}
+    .kpi-trend.up{color:#16a34a;background:#dcfce7}
+
+    /* 卡片通用 */
+    .dash-card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.04);margin-bottom:16px}
+    .dash-card-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #f1f5f9;margin-bottom:14px}
+    .dash-card-title{font-size:14px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:6px}
+    .dash-card-title i{color:#10b981;font-size:13px}
+    .dash-card-badge{background:#f0fdf4;color:#16a34a;font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;display:flex;align-items:center;gap:4px}
+    .dash-card-badge.blue{background:#eff6ff;color:#2563eb}
+    .dash-card-badge.orange{background:#fff7ed;color:#ea580c}
+    .dash-card-badge.purple{background:#faf5ff;color:#9333ea}
+    .dash-card-badge.red{background:#fef2f2;color:#dc2626}
+
+    /* 数据列表 */
+    .data-list{display:flex;flex-direction:column;gap:8px}
+    .data-row{display:flex;align-items:center;padding:10px 12px;border-radius:8px;background:#f8fafc;font-size:13px;transition:background .2s}
+    .data-row:hover{background:#f1f5f9}
+    .data-name{flex:1;color:#334155;font-weight:500}
+    .data-value{font-weight:700;color:#1e293b;margin-left:8px}
+    .data-status{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+    .status-online{background:#dcfce7;color:#16a34a}
+    .status-busy{background:#fef3c7;color:#d97706}
+    .status-warning{background:#fee2e2;color:#dc2626}
+
+    /* 表格样式 */
+    .data-table{width:100%;border-collapse:collapse;font-size:13px}
+    .data-table th{background:#f8fafc;padding:10px 12px;text-align:left;font-weight:600;color:#64748b;border-bottom:1px solid #e2e8f0}
+    .data-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#334155}
+    .data-table tr:hover td{background:#f8fafc}
+
+    /* 两列布局 */
+    .two-col{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+
+    /* 按钮样式 */
+    .btn-primary{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+    .btn-primary:hover{box-shadow:0 4px 12px rgba(16,163,74,0.4)}
+    .btn-secondary{background:#f8fafc;color:#64748b;border:1px solid #e2e8f0;padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+    .btn-secondary:hover{background:#f1f5f9}
+
+    /* 表单样式 */
+    .form-group{margin-bottom:16px}
+    .form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}
+    .form-input{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;color:#334155;transition:all .2s}
+    .form-input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.1)}
+    .form-select{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;color:#334155;background:#fff;cursor:pointer}
+
+    @media(max-width:1200px){
+        .kpi-row{grid-template-columns:repeat(2,1fr)}
+        .quick-actions{grid-template-columns:repeat(2,1fr)}
+        .two-col{grid-template-columns:1fr}
+    }
+    @media(max-width:768px){
+        .sidebar{width:60px}
+        .sidebar-logo .logo-text,.nav-item span,.nav-badge{display:none}
+        .sidebar-logo{justify-content:center;padding:16px 0}
+        .nav-item{justify-content:center;padding:12px 0}
+        .main-content{margin-left:60px}
+        .kpi-row{grid-template-columns:1fr}
+        .quick-actions{grid-template-columns:repeat(2,1fr)}
+    }
+    </style>
+</head>
+<body>
+<div class="app-wrap">
+    <!-- 左侧导航 -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon"><i class="fas fa-user-tie"></i></div>
+            <div class="logo-text">华运物流<small>员工端</small></div>
+        </div>
+        <div class="sidebar-nav">
+            <a class="nav-item active" data-page="dashboard"><i class="fas fa-home"></i><span>工作台</span></a>
+            <a class="nav-item" data-page="order"><i class="fas fa-file-invoice"></i><span>运单录入</span><span class="nav-badge">新</span></a>
+            <a class="nav-item" data-page="dispatch"><i class="fas fa-truck-loading"></i><span>车辆调度</span></a>
+            <a class="nav-item" data-page="tracking"><i class="fas fa-location-arrow"></i><span>运单跟踪</span></a>
+            <a class="nav-item" data-page="exception"><i class="fas fa-exclamation-circle"></i><span>异常上报</span><span class="nav-badge">2</span></a>
+            <a class="nav-item" data-page="salary"><i class="fas fa-wallet"></i><span>工资查询</span></a>
+            <a class="nav-item" data-page="announcement"><i class="fas fa-bullhorn"></i><span>公告通知</span></a>
+            <a class="nav-item" data-page="profile"><i class="fas fa-user-cog"></i><span>个人中心</span></a>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="topbar-breadcrumb">
+                    <i class="fas fa-home"></i>
+                    <span>/</span>
+                    <span id="page-title">工作台</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-time" id="topbar-time">--:--:--</div>
+                <button class="topbar-btn topbar-btn-home" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> 首页</button>
+                <button class="topbar-btn"><i class="fas fa-bell"></i> 消息 <span style="background:#f59e0b;color:#fff;font-size:10px;padding:1px 5px;border-radius:8px;margin-left:4px">3</span></button>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <!-- 工作台 -->
+            <div class="page-container active" id="page-dashboard">
+                <!-- 个人信息卡片 -->
+                <div class="profile-card">
+                    <div class="profile-avatar">王</div>
+                    <div class="profile-info">
+                        <div class="profile-name">王建国 <span style="font-size:14px;color:#fbbf24">★★★★★</span></div>
+                        <div class="profile-role">调度专员 · 工号: EMP20231028</div>
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">28</div>
+                                <div class="profile-stat-label">本月运单</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">98.6</div>
+                                <div class="profile-stat-label">绩效评分</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">¥86,400</div>
+                                <div class="profile-stat-label">本月收入</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快捷操作 -->
+                <div class="quick-actions">
+                    <div class="quick-action blue" onclick="switchPage('order')">
+                        <i class="fas fa-plus-circle"></i>
+                        <div class="quick-action-text">新建运单</div>
+                    </div>
+                    <div class="quick-action green" onclick="switchPage('dispatch')">
+                        <i class="fas fa-truck"></i>
+                        <div class="quick-action-text">车辆调度</div>
+                    </div>
+                    <div class="quick-action orange" onclick="switchPage('exception')">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="quick-action-text">异常上报</div>
+                    </div>
+                    <div class="quick-action purple" onclick="switchPage('salary')">
+                        <i class="fas fa-yen-sign"></i>
+                        <div class="quick-action-text">工资查询</div>
+                    </div>
+                </div>
+
+                <!-- KPI卡片 -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-blue"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">待处理运单</div>
+                            <div class="kpi-value" data-count="12">0</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-green"><i class="fas fa-check-circle"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">今日完成</div>
+                            <div class="kpi-value" data-count="8">0</div>
+                            <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +2</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-orange"><i class="fas fa-truck-moving"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">待调度车辆</div>
+                            <div class="kpi-value" data-count="5">0</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-purple"><i class="fas fa-star"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">安全天数</div>
+                            <div class="kpi-value" data-count="286">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title"><i class="fas fa-clock"></i> 待办事项</div>
+                            <div class="dash-card-badge orange">12项</div>
+                        </div>
+                        <div class="data-list">
+                            <div class="data-row">
+                                <span style="color:#dc2626;font-weight:600;width:60px">[紧急]</span>
+                                <span class="data-name">订单#20240724089 需立即调度车辆</span>
+                                <span class="data-value">10分钟前</span>
+                            </div>
+                            <div class="data-row">
+                                <span style="color:#f59e0b;font-weight:600;width:60px">[待审]</span>
+                                <span class="data-name">司机李志强运费报销申请</span>
+                                <span class="data-value">¥2,400</span>
+                            </div>
+                            <div class="data-row">
+                                <span style="color:#3b82f6;font-weight:600;width:60px">[新单]</span>
+                                <span class="data-name">客户华为供应链 新增订单</span>
+                                <span class="data-value">30分钟前</span>
+                            </div>
+                            <div class="data-row">
+                                <span style="color:#10b981;font-weight:600;width:60px">[完成]</span>
+                                <span class="data-name">沪A·B8927 运单完成确认</span>
+                                <span class="data-value">1小时前</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title"><i class="fas fa-bullhorn"></i> 最新公告</div>
+                            <div class="dash-card-badge blue">3条</div>
+                        </div>
+                        <div class="data-list">
+                            <div class="data-row">
+                                <span style="color:#f59e0b;font-size:12px">[重要]</span>
+                                <span class="data-name">关于夏季高温作业安全通知</span>
+                                <span class="data-value">昨天</span>
+                            </div>
+                            <div class="data-row">
+                                <span style="color:#3b82f6;font-size:12px">[通知]</span>
+                                <span class="data-name">本月绩效考核标准调整说明</span>
+                                <span class="data-value">2天前</span>
+                            </div>
+                            <div class="data-row">
+                                <span style="color:#10b981;font-size:12px">[福利]</span>
+                                <span class="data-name">高温补贴发放通知</span>
+                                <span class="data-value">3天前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 运单录入页 -->
+            <div class="page-container" id="page-order">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-file-invoice"></i> 新建运单</div>
+                    </div>
+                    <div style="max-width:800px">
+                        <div class="two-col">
+                            <div class="form-group">
+                                <label class="form-label">客户名称 *</label>
+                                <select class="form-select">
+                                    <option>请选择客户</option>
+                                    <option>上海鲜达冷链有限公司</option>
+                                    <option>京东物流华东分公司</option>
+                                    <option>华为供应链管理有限公司</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">订单编号</label>
+                                <input type="text" class="form-input" value="系统自动生成" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">装货地址 *</label>
+                                <input type="text" class="form-input" placeholder="请输入装货地址">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">卸货地址 *</label>
+                                <input type="text" class="form-input" placeholder="请输入卸货地址">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">货物名称 *</label>
+                                <input type="text" class="form-input" placeholder="请输入货物名称">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">货物重量(吨) *</label>
+                                <input type="number" class="form-input" placeholder="请输入重量">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">运费金额(元) *</label>
+                                <input type="number" class="form-input" placeholder="请输入运费">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">要求送达时间</label>
+                                <input type="datetime-local" class="form-input">
+                            </div>
+                            <div class="form-group" style="grid-column:span 2">
+                                <label class="form-label">备注</label>
+                                <textarea class="form-input" rows="3" placeholder="请输入备注信息"></textarea>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px;display:flex;gap:12px">
+                            <button class="btn-primary"><i class="fas fa-check"></i> 提交运单</button>
+                            <button class="btn-secondary"><i class="fas fa-save"></i> 保存草稿</button>
+                            <button class="btn-secondary"><i class="fas fa-redo"></i> 重置</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-history"></i> 最近录入</div>
+                        <button class="btn-secondary"><i class="fas fa-list"></i> 查看全部</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户</th>
+                                <th>线路</th>
+                                <th>货物</th>
+                                <th>运费</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#20240724089</strong></td>
+                                <td>华为供应链</td>
+                                <td>穗→杭</td>
+                                <td>制造业 22吨</td>
+                                <td style="color:#10b981;font-weight:700">¥12,800</td>
+                                <td><span class="data-status status-busy">待调度</span></td>
+                                <td>2024-07-24 10:00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>#20240724088</strong></td>
+                                <td>京东物流</td>
+                                <td>京→沪</td>
+                                <td>电商快递 8吨</td>
+                                <td style="color:#10b981;font-weight:700">¥6,200</td>
+                                <td><span class="data-status status-online">已调度</span></td>
+                                <td>2024-07-24 09:15</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 车辆调度页 -->
+            <div class="page-container" id="page-dispatch">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-truck-loading"></i> 待调度订单</div>
+                        <div class="dash-card-badge red">5单</div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户</th>
+                                <th>线路</th>
+                                <th>货物信息</th>
+                                <th>运费</th>
+                                <th>要求时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#20240724089</strong></td>
+                                <td>华为供应链</td>
+                                <td>穗→杭</td>
+                                <td>制造业 22吨</td>
+                                <td style="color:#10b981;font-weight:700">¥12,800</td>
+                                <td>明日 09:00</td>
+                                <td><button class="btn-primary" style="padding:4px 12px;font-size:12px"><i class="fas fa-truck"></i> 调度</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#20240724090</strong></td>
+                                <td>上海鲜达冷链</td>
+                                <td>沪→蓉</td>
+                                <td>冷链生鲜 15吨</td>
+                                <td style="color:#10b981;font-weight:700">¥8,600</td>
+                                <td>今日 18:00</td>
+                                <td><button class="btn-primary" style="padding:4px 12px;font-size:12px"><i class="fas fa-truck"></i> 调度</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-truck"></i> 可用车辆</div>
+                        <div class="dash-card-badge">8辆空闲</div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>车牌号</th>
+                                <th>车辆类型</th>
+                                <th>载重(吨)</th>
+                                <th>当前位置</th>
+                                <th>司机</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>苏E·F7788</strong></td>
+                                <td>轻型货车</td>
+                                <td>5</td>
+                                <td>江苏·苏州</td>
+                                <td>赵小军</td>
+                                <td><span class="data-status status-online">空闲</span></td>
+                                <td><button class="btn-secondary" style="padding:4px 12px;font-size:12px"><i class="fas fa-check"></i> 指派</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>浙A·G9900</strong></td>
+                                <td>重型货车</td>
+                                <td>25</td>
+                                <td>浙江·杭州</td>
+                                <td>孙大伟</td>
+                                <td><span class="data-status status-online">空闲</span></td>
+                                <td><button class="btn-secondary" style="padding:4px 12px;font-size:12px"><i class="fas fa-check"></i> 指派</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 运单跟踪页 -->
+            <div class="page-container" id="page-tracking">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-search"></i> 运单查询</div>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-bottom:16px">
+                        <input type="text" class="form-input" placeholder="输入订单号、车牌号或客户名称" style="max-width:400px">
+                        <button class="btn-primary"><i class="fas fa-search"></i> 查询</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>车牌号</th>
+                                <th>司机</th>
+                                <th>线路</th>
+                                <th>当前位置</th>
+                                <th>状态</th>
+                                <th>预计到达</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#20240724001</strong></td>
+                                <td>沪A·B8927</td>
+                                <td>王建国</td>
+                                <td>沪→蓉</td>
+                                <td>湖北·武汉</td>
+                                <td><span class="data-status status-online">运输中</span></td>
+                                <td>今日 18:30</td>
+                                <td><a href="#" style="color:#10b981;font-weight:600">详情</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#20240724002</strong></td>
+                                <td>京C·D3341</td>
+                                <td>李志强</td>
+                                <td>京→沪</td>
+                                <td>山东·济南</td>
+                                <td><span class="data-status status-online">运输中</span></td>
+                                <td>明日 09:00</td>
+                                <td><a href="#" style="color:#10b981;font-weight:600">详情</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 异常上报页 -->
+            <div class="page-container" id="page-exception">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-exclamation-circle"></i> 异常上报</div>
+                    </div>
+                    <div style="max-width:800px">
+                        <div class="two-col">
+                            <div class="form-group">
+                                <label class="form-label">关联运单 *</label>
+                                <select class="form-select">
+                                    <option>请选择运单</option>
+                                    <option>#20240724001 - 沪A·B8927</option>
+                                    <option>#20240724002 - 京C·D3341</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">异常类型 *</label>
+                                <select class="form-select">
+                                    <option>请选择类型</option>
+                                    <option>车辆故障</option>
+                                    <option>交通事故</option>
+                                    <option>货物损坏</option>
+                                    <option>延误</option>
+                                    <option>其他</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="grid-column:span 2">
+                                <label class="form-label">异常描述 *</label>
+                                <textarea class="form-input" rows="4" placeholder="请详细描述异常情况"></textarea>
+                            </div>
+                            <div class="form-group" style="grid-column:span 2">
+                                <label class="form-label">上传图片</label>
+                                <input type="file" class="form-input" accept="image/*" multiple>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px">
+                            <button class="btn-primary"><i class="fas fa-paper-plane"></i> 提交上报</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-history"></i> 上报记录</div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>上报时间</th>
+                                <th>运单号</th>
+                                <th>异常类型</th>
+                                <th>描述</th>
+                                <th>处理状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-07-24 14:30</td>
+                                <td>#20240724002</td>
+                                <td>延误</td>
+                                <td>因交通管制导致延误2小时</td>
+                                <td><span class="data-status status-busy">处理中</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-07-23 16:20</td>
+                                <td>#20240723088</td>
+                                <td>车辆故障</td>
+                                <td>车辆爆胎,已联系维修</td>
+                                <td><span class="data-status status-online">已解决</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 工资查询页 -->
+            <div class="page-container" id="page-salary">
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-green"><i class="fas fa-yen-sign"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">本月收入</div>
+                            <div class="kpi-value" data-count="86400" data-dec="0">0</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-blue"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">本月运单</div>
+                            <div class="kpi-value" data-count="28">0</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-purple"><i class="fas fa-road"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">总里程(km)</div>
+                            <div class="kpi-value" data-count="8560">0</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon-wrap kpi-icon-orange"><i class="fas fa-star"></i></div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">绩效评分</div>
+                            <div class="kpi-value" data-count="98.6" data-dec="1">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-file-invoice-dollar"></i> 工资明细</div>
+                        <select class="form-select" style="width:150px">
+                            <option>2024年7月</option>
+                            <option>2024年6月</option>
+                            <option>2024年5月</option>
+                        </select>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>订单号</th>
+                                <th>线路</th>
+                                <th>货物</th>
+                                <th>运费</th>
+                                <th>提成比例</th>
+                                <th>提成金额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-07-24</td>
+                                <td>#20240724001</td>
+                                <td>沪→蓉</td>
+                                <td>冷链生鲜 15吨</td>
+                                <td>¥8,600</td>
+                                <td>12%</td>
+                                <td style="color:#10b981;font-weight:700">¥1,032</td>
+                            </tr>
+                            <tr>
+                                <td>2024-07-23</td>
+                                <td>#20240723088</td>
+                                <td>京→沪</td>
+                                <td>电商快递 8吨</td>
+                                <td>¥6,200</td>
+                                <td>12%</td>
+                                <td style="color:#10b981;font-weight:700">¥744</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center">
+                        <div style="color:#64748b;font-size:13px">本月提成合计: <strong style="color:#10b981;font-size:18px">¥86,400</strong></div>
+                        <button class="btn-secondary"><i class="fas fa-download"></i> 导出明细</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 公告通知页 -->
+            <div class="page-container" id="page-announcement">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div class="dash-card-title"><i class="fas fa-bullhorn"></i> 公司公告</div>
+                    </div>
+                    <div class="data-list">
+                        <div class="data-row" style="flex-direction:column;align-items:flex-start;padding:14px 16px">
+                            <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:8px">
+                                <strong style="color:#f59e0b">[重要] 关于夏季高温作业安全通知</strong>
+                                <span style="color:#94a3b8;font-size:12px">2024-07-23</span>
+                            </div>
+                            <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6">
+                                各位同事:近期气温持续升高,为确保员工健康与作业安全,现就夏季高温作业事项通知如下:
+                                一、合理安排作业时间,避开高温时段;二、配备必要的防暑降温物资;三、加强车辆检查与维护...
+                            </p>
+                        </div>
+                        <div class="data-row" style="flex-direction:column;align-items:flex-start;padding:14px 16px">
+                            <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:8px">
+                                <strong style="color:#3b82f6">[通知] 本月绩效考核标准调整说明</strong>
+                                <span style="color:#94a3b8;font-size:12px">2024-07-22</span>
+                            </div>
+                            <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6">
+                                根据公司运营情况,本月绩效考核标准作如下调整:一、准时率权重由30%提升至35%;二、新增客户满意度指标...
+                            </p>
+                        </div>
+                        <div class="data-row" style="flex-direction:column;align-items:flex-start;padding:14px 16px">
+                            <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:8px">
+                                <strong style="color:#10b981">[福利] 高温补贴发放通知</strong>
+                                <span style="color:#94a3b8;font-size:12px">2024-07-21</span>
+                            </div>
+                            <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6">
+                                公司决定为高温作业员工发放补贴:室外作业人员300元/月,室内作业人员150元/月,补贴将于本月工资中发放...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人中心页 -->
+            <div class="page-container" id="page-profile">
+                <div class="two-col">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title"><i class="fas fa-user"></i> 个人信息</div>
+                        </div>
+                        <div class="data-list">
+                            <div class="data-row"><span style="color:#64748b;width:100px">姓名</span><span class="data-value">王建国</span></div>
+                            <div class="data-row"><span style="color:#64748b;width:100px">工号</span><span class="data-value">EMP20231028</span></div>
+                            <div class="data-row"><span style="color:#64748b;width:100px">部门</span><span class="data-value">调度中心</span></div>
+                            <div class="data-row"><span style="color:#64748b;width:100px">职位</span><span class="data-value">调度专员</span></div>
+                            <div class="data-row"><span style="color:#64748b;width:100px">手机号</span><span class="data-value">138****5678</span></div>
+                            <div class="data-row"><span style="color:#64748b;width:100px">入职时间</span><span class="data-value">2023-10-28</span></div>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title"><i class="fas fa-medal"></i> 绩效统计</div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+                            <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:8px">
+                                <div style="font-size:24px;font-weight:800;color:#10b981">98.6</div>
+                                <div style="font-size:12px;color:#64748b;margin-top:4px">综合评分</div>
+                            </div>
+                            <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:8px">
+                                <div style="font-size:24px;font-weight:800;color:#3b82f6">99.2%</div>
+                                <div style="font-size:12px;color:#64748b;margin-top:4px">准时率</div>
+                            </div>
+                            <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:8px">
+                                <div style="font-size:24px;font-weight:800;color:#f59e0b">28</div>
+                                <div style="font-size:12px;color:#64748b;margin-top:4px">本月运单</div>
+                            </div>
+                            <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:8px">
+                                <div style="font-size:24px;font-weight:800;color:#9333ea">0</div>
+                                <div style="font-size:12px;color:#64748b;margin-top:4px">异常次数</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+// 时钟
+function updateTopbarClock(){
+    var now=new Date();
+    var h=String(now.getHours()).padStart(2,'0');
+    var m=String(now.getMinutes()).padStart(2,'0');
+    var s=String(now.getSeconds()).padStart(2,'0');
+    var el=document.getElementById('topbar-time');
+    if(el) el.textContent=h+':'+m+':'+s;
+}
+updateTopbarClock();
+setInterval(updateTopbarClock,1000);
+
+// KPI数字递增
+function animateCount(el){
+    var target=parseFloat(el.dataset.count);
+    var dec=parseInt(el.dataset.dec||'0');
+    var start=performance.now();
+    var dur=1500;
+    function step(now){
+        var p=Math.min((now-start)/dur,1);
+        var e=1-Math.pow(1-p,3);
+        var v=target*e;
+        el.textContent=dec>0?v.toFixed(dec):Math.floor(v).toLocaleString('zh-CN');
+        if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// 页面切换
+var pageTitles={
+    dashboard:'工作台',
+    order:'运单录入',
+    dispatch:'车辆调度',
+    tracking:'运单跟踪',
+    exception:'异常上报',
+    salary:'工资查询',
+    announcement:'公告通知',
+    profile:'个人中心'
+};
+
+function switchPage(pageId){
+    document.querySelectorAll('.page-container').forEach(function(p){p.classList.remove('active')});
+    var target=document.getElementById('page-'+pageId);
+    if(target){
+        target.classList.add('active');
+        target.querySelectorAll('[data-count]').forEach(animateCount);
+    }
+    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+    var nav=document.querySelector('.nav-item[data-page="'+pageId+'"]');
+    if(nav) nav.classList.add('active');
+    var titleEl=document.getElementById('page-title');
+    if(titleEl) titleEl.textContent=pageTitles[pageId]||'工作台';
+}
+
+// 导航点击事件
+document.querySelectorAll('.nav-item').forEach(function(item){
+    item.addEventListener('click',function(){
+        var page=this.dataset.page;
+        if(page) switchPage(page);
+    });
+});
+
+// 初始动画
+document.querySelectorAll('.page-container.active [data-count]').forEach(animateCount);
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华运物流集团 - 智慧物流管理平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 企业门户专用样式 */
+        .portal-hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .portal-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .portal-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+        }
+        .portal-glow-1 { top: -200px; left: -200px; background: #3b82f6; }
+        .portal-glow-2 { bottom: -200px; right: -200px; background: #06b6d4; }
+        
+        .portal-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+        .portal-logo {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: #fff;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+        }
+        .portal-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .portal-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 60px;
+        }
+        
+        .portal-cards {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .portal-card {
+            width: 320px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .portal-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .portal-card-icon {
+            width: 80px; height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+        }
+        .portal-card-admin .portal-card-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+        }
+        .portal-card-employee .portal-card-icon {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #fff;
+        }
+        .portal-card h3 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .portal-card p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .portal-card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .portal-card-features span {
+            background: rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .portal-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0; right: 0;
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+        }
+        
+        .portal-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .portal-back:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .portal-title { font-size: 32px; }
+            .portal-cards { flex-direction: column; align-items: center; }
+            .portal-card { width: 90%; max-width: 320px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-hero">
+        <div class="portal-glow portal-glow-1"></div>
+        <div class="portal-glow portal-glow-2"></div>
+        
+        <a href="index.html" class="portal-back">
+            <i class="fas fa-arrow-left"></i> 返回首页
+        </a>
+        
+        <div class="portal-content">
+            <div class="portal-logo">
+                <i class="fas fa-truck-fast"></i>
+            </div>
+            <h1 class="portal-title">华运物流集团</h1>
+            <p class="portal-subtitle">智慧物流管理平台 · 让运输更高效</p>
+            
+            <div class="portal-cards">
+                <!-- 管理端入口 -->
+                <a href="console.html" class="portal-card portal-card-admin">
+                    <div class="portal-card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>管理端</h3>
+                    <p>面向企业管理层<br>全面掌控运营数据与决策</p>
+                    <div class="portal-card-features">
+                        <span>车辆调度</span>
+                        <span>运费结算</span>
+                        <span>数据分析</span>
+                        <span>绩效考核</span>
+                    </div>
+                </a>
+                
+                <!-- 员工端入口 -->
+                <a href="employee.html" class="portal-card portal-card-employee">
+                    <div class="portal-card-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>员工端</h3>
+                    <p>面向一线员工<br>高效处理日常业务与协作</p>
+                    <div class="portal-card-features">
+                        <span>运单录入</span>
+                        <span>车辆调度</span>
+                        <span>异常上报</span>
+                        <span>工资查询</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="portal-footer">
+            © 2026 华运物流集团 · 智慧物流管理平台 v3.0
+        </div>
+    </div>
+</body>
+</html>
