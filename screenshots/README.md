@@ -22,12 +22,6 @@
 
 > 概览流程（大视口）
 
-### `mobile-home.png`
-
-![移动端响应式（390×844）](mobile-home.png)
-
-> 移动端响应式（390×844）
-
 ### `portal-association.png`
 
 ![商会门户（物流）](portal-association.png)
@@ -39,6 +33,12 @@
 ![员工端工作台（物流）](portal-employee.png)
 
 > 员工端工作台（物流）
+
+### `wechat-qrcode.png`
+
+![wechat-qrcode.png](wechat-qrcode.png)
+
+> wechat-qrcode.png
 
 ## 如何重新生成截图
 
