@@ -15,6 +15,12 @@
 
 [English](README.md) | [中文](README.zh.md)
 
+## Key Scenarios
+
+- **🚚 Fleet & routes** — Monitor vehicles in transit and operating routes live.
+- **📊 Association KPIs** — Members, integration volume and GMV at a glance.
+- **🛠️ Member & employee portals** — Separate consoles for association members and employees.
+
 ## Features
 
 ### Core Features
@@ -59,33 +65,15 @@ Real screenshots captured via local server + headless Edge:
 
 ## Quick Start
 
-### Prerequisites
-- Git
-- Nginx / Apache (or any static/PHP host)
-- For the static sites: any browser
-- For the PHP sites: PHP 8.0+, MySQL 5.7+ or SQLite
-
-### Installation
+Three commands to get started:
 
 ```bash
-# Clone the repository
 git clone https://gitee.com/qyfanshen/wuliu.qyfanshen.git
 cd wuliu.qyfanshen.com
-
+python3 -m http.server 8080   # open http://localhost:8080
 ```
 
-### Local Preview
-
-```bash
-# Static site
-python -m http.server 8080
-
-# PHP site
-php -S 127.0.0.1:8080 -t .
-```
-
-Then open http://localhost:8080
-
+> Full steps (Nginx, env vars, production) in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 ## Usage Guide
 
 1. Configure your environment (`.env` for PHP, deploy config for static).
@@ -250,11 +238,15 @@ Please read our [Code of Conduct](CODE_OF_CONDUCT.md) — be kind and respectful
 
 ## Security
 
-Found a vulnerability? Read the [Security Policy](SECURITY.md) before reporting.
+Spotted a security issue? 💖 Thank you for disclosing it responsibly!
+
+Before sending the report, please take a moment to skim the [Security Policy](SECURITY.md) — it helps us respond faster and ensures nothing slips through.
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first. Use the [issue templates](.github/ISSUE_TEMPLATE/) and the [PR template](.github/PULL_REQUEST_TEMPLATE.md).
+Contributions are warmly welcomed! 💖
+
+If you'd like to help out, please read our [CONTRIBUTING.md](CONTRIBUTING.md) and use the [issue templates](.github/ISSUE_TEMPLATE/) along with the [PR template](.github/PULL_REQUEST_TEMPLATE.md) — it makes collaboration much smoother for everyone. 🙏
 
 ## License
 
