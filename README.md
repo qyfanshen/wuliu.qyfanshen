@@ -2,6 +2,8 @@
 
 > Digital Management Platform for Logistics Associations
 
+> 🚀 **[Live Demo](https://wuliu.qyfanshen.com)** · 📚 **[Docs](docs/)** · 📋 **[Quick Start](docs/QUICKSTART.md)** · 🐛 **[Report Bug](https://github.com/qyfanshen/wuliu.qyfanshen/issues)** · ⭐ **[Star](https://github.com/qyfanshen/wuliu.qyfanshen)**
+
 ![preview](screenshots/preview.png)
 <p align="center">
   <a href="https://github.com/qyfanshen/wuliu.qyfanshen"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
