@@ -13,6 +13,8 @@
 
 ---
 
+**Smart Logistics** is a digital management platform for logistics associations — fleet & route monitoring, member KPIs and role-separated consoles.
+
 [English](README.md) | [中文](README.zh.md)
 
 ## Key Scenarios
